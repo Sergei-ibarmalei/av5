@@ -14,8 +14,11 @@ bool isGonnaCrossLeft(ship_t* hero);
 void recomputeHeroLaserPos(ship_t* hero);
 void recomputeHeroRects(ship_t* hero);
 void recomputeHeroCenter(ship_t* hero);
+bool makeMainMenu(tc* collection);
 
 noaction_t* noaction;
+
+
 
 bool makeNoAction(tc* collection)
 {
@@ -116,6 +119,11 @@ bool makeNoAction(tc* collection)
     }
     setStarCoord(noaction); 
     makeScoreBanner(noaction->scoreBanner, collection->gameText);
+    if (!makeMainMenu(collection))
+    {
+        closeNoAction();
+        return false;
+    }
     return true;
 }
 
@@ -425,4 +433,49 @@ void moveSky()
 
     #undef BORDER_LEFT
     #undef BORDER_RIGHT
+}
+
+/*Установка кооридинат для текстур главного меню */
+bool makeMainMenu(tc* collection)
+{
+    if (!collection || !collection->gameText)
+    {
+        printf("Cannot make main menu, textures are absent.\n");
+        return false;
+    }
+    
+    plot center;
+    int upborder;
+    int workAreaHeight;
+    int oneFourth;
+    int count;
+    int step;
+    
+    upborder = noaction->border->border->y + noaction->border->border->h;
+    workAreaHeight = S_H - upborder;
+    oneFourth = workAreaHeight / 4;
+
+    step = 0;
+    center.x = S_W / 2;
+    for (count = new_game; count < new_game_Chosen; ++count)
+    {
+        center.y = upborder + (step * oneFourth); 
+        collection->gameText[count].objRect->x =
+            center.x - collection->gameText[count].objRect->w / 2;
+        collection->gameText[count].objRect->y =
+            center.y - collection->gameText[count].objRect->h / 2;
+        step += 1;
+    }
+
+    step = 0;
+    for (count = new_game_Chosen; count < press_esc; ++count)
+    {
+        center.y = upborder + (step * oneFourth);
+        collection->gameText[count].objRect->x = 
+            center.x - collection->gameText[count].objRect-> w / 2;
+        collection->gameText[count].objRect->y = 
+            center.y - collection->gameText[count].objRect->h / 2;
+        step += 1;
+    }
+    return true;
 }

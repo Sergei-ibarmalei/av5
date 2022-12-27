@@ -2,7 +2,7 @@
 #define FONTPROPERTIES_H
 
 #define FONT_GAME "tower-ruins/towerruins.ttf"
-#define MENU_FONT_SIZE 50
+#define MENU_FONT_SIZE 100 
 #define PAUSE_FONT_SIZE 150
 #define GUI_FONT_SIZE 20
 #define SCORE_FONT_SIZE 30

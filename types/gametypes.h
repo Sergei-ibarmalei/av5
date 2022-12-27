@@ -50,9 +50,9 @@ enum simpleTextTextures {zero,
                          new_game,
                          rules,
                          game_exit,
-                         new_game_Shadow,
-                         rules_Shadow,
-                         exit_Shadow,
+                         new_game_Chosen,
+                         rules_Chosen,
+                         exit_Chosen,
                          press_esc,
                          allSimpleTextObjects};
 

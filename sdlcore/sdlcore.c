@@ -3,6 +3,8 @@
 
 void textureRender(sdl_type* sdl, SDL_Texture* t, SDL_Rect* r);
 
+
+
 bool sdlInit(sdl_type* sdl, int s_w, int s_h, char* appName)
 {
     int imgFlags;

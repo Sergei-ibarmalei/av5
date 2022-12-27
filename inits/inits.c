@@ -19,6 +19,7 @@ void initGameStatus(status_t* status)
 
 font_type* initGameFonts()
 {
+
     int count;
     font_type* gameFonts = malloc(sizeof(font_type)*allfonts);
     if (!gameFonts)
@@ -75,6 +76,7 @@ void setFontsProperties(font_type* ft)
 /*Инициализация всех текстур - картинок и текстур текста*/
 bool initTextsCollection(sdl_type* sdl, tc* collection, font_type* gameFonts)
 {
+
     int object;
     const char* complexFileName[] = {"Hero_1.png",
                                      "alien_one.png"};
@@ -170,7 +172,7 @@ bool initTextsCollection(sdl_type* sdl, tc* collection, font_type* gameFonts)
         }
     
     /*Создание текстур для главного меню*/
-    for (object = new_game; object < new_game_Shadow; ++object)
+    for (object = new_game; object < new_game_Chosen; ++object)
     {
         collection->gameText[object].objTexture = NULL;
         collection->gameText[object].objRect = malloc(sizeof(SDL_Rect));
@@ -186,7 +188,7 @@ bool initTextsCollection(sdl_type* sdl, tc* collection, font_type* gameFonts)
     }
 
     /*Создание текстур для главного меню с ТЕНЬЮ*/
-    for (object = new_game_Shadow; object < press_esc; ++object)
+    for (object = new_game_Chosen; object < press_esc; ++object)
     {
         collection->gameText[object].objTexture = NULL;
         collection->gameText[object].objRect = malloc(sizeof(SDL_Rect));
@@ -207,6 +209,7 @@ bool initTextsCollection(sdl_type* sdl, tc* collection, font_type* gameFonts)
     object = press_esc;
     collection->gameText[object].objTexture = NULL;
     collection->gameText[object].objRect = malloc(sizeof(SDL_Rect));
+
     if (loadFromText(sdl,
                      simpleTextNames[object],
                      &gameFonts[guifont],
@@ -216,6 +219,7 @@ bool initTextsCollection(sdl_type* sdl, tc* collection, font_type* gameFonts)
             printf("Cannot create texture for Press esc.., abort.\n");
             return false;
         }
+    
     return true;
 }
 

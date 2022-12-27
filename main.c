@@ -8,7 +8,7 @@ int main()
     ship_t hero;
     plot   hero_start;
     status_t gameStatus;
-
+    
     if (sdlInit(&sdl, S_W, S_H, "app") == false)
     {
         sdlClose(&sdl);
@@ -20,7 +20,7 @@ int main()
         sdlClose(&sdl);
         return 1;
     }
-    
+
 
     if (initTextsCollection(&sdl, &texturesColleciton, gameFonts) == false)
     {
@@ -46,7 +46,6 @@ int main()
     }
 
     initGameStatus(&gameStatus);
-
 
     while(!sdl.gameQuit)
     {
