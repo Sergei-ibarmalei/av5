@@ -20,6 +20,7 @@ int main()
         sdlClose(&sdl);
         return 1;
     }
+    
 
     if (initTextsCollection(&sdl, &texturesColleciton, gameFonts) == false)
     {
