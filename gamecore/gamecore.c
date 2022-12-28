@@ -18,7 +18,7 @@ void recomputeHeroCenter(ship_t* hero);
 bool makeMainMenu(tc* collection);
 bool makePause(tc* collection);
 
-static enum noaction_pause {na_pause, na_press_esc};
+enum noaction_pause {na_pause, na_press_esc};
 static noaction_t* noaction;
 
 
@@ -431,6 +431,14 @@ void showScoreBanner(sdl_type* sdl)
 void showSky(sdl_type* sdl)
 {
     renderSky(sdl, noaction->sky);
+}
+
+void showPause(sdl_type* sdl)
+{
+    textureRender(sdl, noaction->pause[na_pause].objTexture,
+                    noaction->pause[na_pause].objRect);
+    textureRender(sdl, noaction->pause[na_press_esc].objTexture,
+                    noaction->pause[na_press_esc].objRect);
 }
 
 void moveSky()

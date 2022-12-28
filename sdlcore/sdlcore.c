@@ -215,6 +215,7 @@ void allTexturesFree(tc* collection)
 /*Рисуем одну текстуру*/
 void textureRender(sdl_type* sdl, SDL_Texture* t, SDL_Rect* r)
 {
+    if (!t) return;
     SDL_RenderCopy(sdl->gRenderer, t, NULL, r);
 }
 

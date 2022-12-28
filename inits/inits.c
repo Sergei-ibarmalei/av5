@@ -64,7 +64,7 @@ void setFontsProperties(font_type* ft)
 
     ft[guifont].fp.fontSize = GUI_FONT_SIZE;
     ft[guifont].fp.fontColor = YELLOW_GREEN;
-    ft[guifont].fp.isAlpha = false;
+    ft[guifont].fp.isAlpha = true;
 
     ft[scorefont].fp.fontSize = SCORE_FONT_SIZE;
     ft[scorefont].fp.fontColor = CRIMSON;
@@ -87,7 +87,7 @@ bool initTextsCollection(sdl_type* sdl, tc* collection, font_type* gameFonts)
                                      "7", "8", "9",
                                      "PAUSE", "NEW GAME", "RULES", "EXIT",
                                      "NEW GAME", "RULES", "EXIT",
-                                     "PRESS ESC TO EXIT, Q TO CONTINUE"};
+                                     "PRESS ESC TO EXIT, Q TO MAIN MENU"};
 
     collection->complexObj = malloc(sizeof(complex_type)*allComplexObjects);
     if (!collection->complexObj)

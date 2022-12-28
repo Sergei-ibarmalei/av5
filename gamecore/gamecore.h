@@ -17,5 +17,6 @@ void showBorder(sdl_type* sdl);
 void showScoreBanner(sdl_type* sdl);
 void showSky(sdl_type* sdl);
 void moveSky();
+void showPause(sdl_type* sdl);
 
 #endif
