@@ -15,6 +15,7 @@ void recomputeHeroLaserPos(ship_t* hero);
 void recomputeHeroRects(ship_t* hero);
 void recomputeHeroCenter(ship_t* hero);
 bool makeMainMenu(tc* collection);
+bool makePause(tc* collection);
 
 noaction_t* noaction;
 
@@ -120,6 +121,11 @@ bool makeNoAction(tc* collection)
     setStarCoord(noaction); 
     makeScoreBanner(noaction->scoreBanner, collection->gameText);
     if (!makeMainMenu(collection))
+    {
+        closeNoAction();
+        return false;
+    }
+    if (!makePause(collection))
     {
         closeNoAction();
         return false;
@@ -433,6 +439,34 @@ void moveSky()
 
     #undef BORDER_LEFT
     #undef BORDER_RIGHT
+}
+
+/*Установка координат для PAUSE и Press esc..*/
+bool makePause(tc* collection)
+{
+    if (!collection || !collection->gameText)
+    {
+        printf("Cannot make pause, textures are absent.\n");
+        return false;
+    }
+    plot centerPause;
+    plot centerPressEsc;
+
+    centerPause.x = S_W / 2;
+    centerPause.y = S_H / 2;
+    centerPressEsc.x = S_W / 2;
+    centerPressEsc.y = S_H - 100;
+
+    collection->gameText[pause].objRect->x =
+        centerPause.x - collection->gameText[pause].objRect->w / 2;
+    collection->gameText[pause].objRect->y =
+        centerPause.y - collection->gameText[pause].objRect->h / 2;
+    collection->gameText[press_esc].objRect->x =
+        centerPressEsc.x - collection->gameText[press_esc].objRect->w / 2;
+    collection->gameText[press_esc].objRect->y =
+        centerPressEsc.y - collection->gameText[press_esc].objRect->h / 2;
+    
+    return true;
 }
 
 /*Установка кооридинат для текстур главного меню */
