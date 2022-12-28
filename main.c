@@ -51,7 +51,10 @@ int main()
     while(!sdl.gameQuit)
     {
         SDL_RenderClear(sdl.gRenderer);
-        showMainMenu(&sdl, &texturesColleciton, &gameStatus); 
+        if (gameStatus.mainMenu)
+        {
+            showMainMenu(&sdl, &texturesColleciton, &gameStatus); 
+        }
         playerAction(&sdl, &hero, &texturesColleciton); 
         moveHero(&hero);
         showSky(&sdl);
