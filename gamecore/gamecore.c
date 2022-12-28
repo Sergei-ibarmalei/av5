@@ -1,4 +1,5 @@
 #include "gamecore.h"
+#define PAUSE_STRINGS_LEN 2
 
 bool makeBorder(border_t* border);
 void makeScoreBanner(score_t* scoreBanner, simple_type* gameText);
@@ -17,7 +18,8 @@ void recomputeHeroCenter(ship_t* hero);
 bool makeMainMenu(tc* collection);
 bool makePause(tc* collection);
 
-noaction_t* noaction;
+static enum noaction_pause {na_pause, na_press_esc};
+static noaction_t* noaction;
 
 
 
@@ -34,6 +36,7 @@ bool makeNoAction(tc* collection)
     noaction->border = NULL;
     noaction->scoreBanner = NULL;
     noaction->sky = NULL;
+    noaction->pause = NULL;
 
     noaction->border = malloc(sizeof(border_t));
     if (!noaction->border)
@@ -94,8 +97,17 @@ bool makeNoAction(tc* collection)
         return false;
     } 
 
+    /*Pause состоит из Pause и Press esc..*/
+    noaction->pause = malloc(sizeof(simple_type) * PAUSE_STRINGS_LEN);
+    if (!noaction->pause)
+    {
+        printf("Internal error by managing memory of pause.\n");
+        closeNoAction();
+        return false;
+    }
 
-    /*Резервируем память под scoreBanner*/
+
+    /*Резервируем память под scoreBanner
     noaction->scoreBanner = malloc(sizeof(score_t));
     if (!noaction->scoreBanner)
     {
@@ -110,7 +122,7 @@ bool makeNoAction(tc* collection)
         printf("Internal error by managing memory of score banner.\n");
         closeNoAction(); 
         return false;
-    }
+    }*/
 
 
     if (!(makeBorder(noaction->border)))
@@ -262,6 +274,16 @@ void closeNoAction()
         free(noaction->scoreBanner);
     }
     noaction->scoreBanner = NULL;
+
+    if (noaction->pause)
+    {
+        if (noaction->pause->objTexture)
+        {
+            noaction->pause->objTexture = NULL;
+        }
+        free(noaction->pause);
+    }
+    noaction->pause = NULL;
     free(noaction);
     noaction = NULL;
 }
@@ -400,6 +422,7 @@ void showBorder(sdl_type* sdl)
     renderBorder(sdl, noaction->border->border);
 }
 
+
 void showScoreBanner(sdl_type* sdl)
 {
     renderScoreBanner(sdl, noaction->scoreBanner, SCORE_BANNER_LEN);
@@ -457,15 +480,18 @@ bool makePause(tc* collection)
     centerPressEsc.x = S_W / 2;
     centerPressEsc.y = S_H - 100;
 
-    collection->gameText[pause].objRect->x =
-        centerPause.x - collection->gameText[pause].objRect->w / 2;
-    collection->gameText[pause].objRect->y =
-        centerPause.y - collection->gameText[pause].objRect->h / 2;
-    collection->gameText[press_esc].objRect->x =
-        centerPressEsc.x - collection->gameText[press_esc].objRect->w / 2;
-    collection->gameText[press_esc].objRect->y =
-        centerPressEsc.y - collection->gameText[press_esc].objRect->h / 2;
-    
+    noaction->pause[na_pause] = collection->gameText[pause];
+    noaction->pause[na_press_esc] = collection->gameText[press_esc];
+
+    noaction->pause[na_pause].objRect->x =
+        centerPause.x - noaction->pause[na_pause].objRect->w / 2;
+    noaction->pause[na_pause].objRect->y =
+        centerPause.y - noaction->pause[na_pause].objRect->h / 2;
+    noaction->pause[na_press_esc].objRect->x =
+        centerPressEsc.x - noaction->pause[na_press_esc].objRect->w / 2;
+    noaction->pause[na_press_esc].objRect->y =
+        centerPressEsc.y - noaction->pause[na_press_esc].objRect->h / 2;
+
     return true;
 }
 

@@ -108,9 +108,10 @@ typedef struct
 /*No action stuff like score, border, sky*/
 typedef struct
 {
-    border_t* border;
-    sky_t*    sky;
-    score_t*  scoreBanner;
+    border_t*    border;
+    sky_t*       sky;
+    score_t*     scoreBanner;
+    simple_type* pause;
 } noaction_t;
 
 
