@@ -55,6 +55,7 @@ int main()
         {
             showMainMenu(&sdl, &texturesColleciton, &gameStatus); 
         }
+        continue;
         playerAction(&sdl, &hero, &texturesColleciton); 
         moveHero(&hero);
         showSky(&sdl);
