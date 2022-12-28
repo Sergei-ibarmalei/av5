@@ -445,21 +445,18 @@ bool makeMainMenu(tc* collection)
     }
     
     plot center;
-    int upborder;
-    int workAreaHeight;
     int oneFourth;
     int count;
     int step;
     
-    upborder = noaction->border->border->y + noaction->border->border->h;
-    workAreaHeight = S_H - upborder;
-    oneFourth = workAreaHeight / 4;
+    
+    oneFourth = S_H / 4;
 
-    step = 0;
+    step = 1;
     center.x = S_W / 2;
     for (count = new_game; count < new_game_Chosen; ++count)
     {
-        center.y = upborder + (step * oneFourth); 
+        center.y = step * oneFourth;
         collection->gameText[count].objRect->x =
             center.x - collection->gameText[count].objRect->w / 2;
         collection->gameText[count].objRect->y =
@@ -467,10 +464,10 @@ bool makeMainMenu(tc* collection)
         step += 1;
     }
 
-    step = 0;
+    step = 1;
     for (count = new_game_Chosen; count < press_esc; ++count)
     {
-        center.y = upborder + (step * oneFourth);
+        center.y = step * oneFourth;
         collection->gameText[count].objRect->x = 
             center.x - collection->gameText[count].objRect-> w / 2;
         collection->gameText[count].objRect->y = 

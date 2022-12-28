@@ -5,6 +5,7 @@ set(SOURCES
     gamecore/gamecore.c
     inits/inits.c
     random/rand.c
+    mainmenu/mainmenu.c
     main.c)
 
 SET(CMAKE_C_COMPILER /usr/bin/clang)

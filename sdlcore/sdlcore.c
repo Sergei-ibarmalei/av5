@@ -1,7 +1,6 @@
 #include "sdlcore.h"
 #include <stdio.h>
 
-void textureRender(sdl_type* sdl, SDL_Texture* t, SDL_Rect* r);
 
 
 

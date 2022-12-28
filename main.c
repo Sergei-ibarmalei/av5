@@ -1,4 +1,5 @@
 #include "gamecore/gamecore.h"
+#include "mainmenu/mainmenu.h"
 
 int main()
 {
@@ -50,6 +51,7 @@ int main()
     while(!sdl.gameQuit)
     {
         SDL_RenderClear(sdl.gRenderer);
+        showMainMenu(&sdl, &texturesColleciton, &gameStatus); 
         playerAction(&sdl, &hero, &texturesColleciton); 
         moveHero(&hero);
         showSky(&sdl);

@@ -25,5 +25,6 @@ void renderComplexObject(sdl_type* sdl, complex_type* obj);
 void renderBorder(sdl_type* sdl, SDL_Rect* sides);
 void renderScoreBanner(sdl_type* sdl, score_t* scoreBanner, int segments);
 void renderSky(sdl_type* sdl, sky_t* sky);
+void textureRender(sdl_type* sdl, SDL_Texture* t, SDL_Rect* r);
                   
 #endif
