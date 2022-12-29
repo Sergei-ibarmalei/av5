@@ -15,6 +15,7 @@ void initGameStatus(status_t* status)
     status->pause    = false;
     status->partOne  = false;
     status->partTwo  = false;
+    status->HeroLives = HERO_LIVES;
 }
 
 font_type* initGameFonts()

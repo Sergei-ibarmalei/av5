@@ -37,6 +37,17 @@ bool makeNoAction(tc* collection)
     noaction->scoreBanner = NULL;
     noaction->sky = NULL;
     noaction->pause = NULL;
+    noaction->heroLivesBanner = NULL;
+
+    noaction->heroLivesBanner = malloc(sizeof(simple_type));
+    {
+        if (!noaction->heroLivesBanner)
+        {
+            printf("Internal error by managing memory of hero lives banner.\n");
+            closeNoAction();
+            return false;
+        }
+    }
 
     noaction->border = malloc(sizeof(border_t));
     if (!noaction->border)
@@ -105,24 +116,6 @@ bool makeNoAction(tc* collection)
         closeNoAction();
         return false;
     }
-
-
-    /*Резервируем память под scoreBanner
-    noaction->scoreBanner = malloc(sizeof(score_t));
-    if (!noaction->scoreBanner)
-    {
-        printf("Internal error by managing memory of score.\n");
-        closeNoAction();
-        return false;
-    }
-    noaction->scoreBanner->scoreTexture =
-        malloc(sizeof(simple_type)* SCORE_BANNER_LEN);
-    if (!noaction->scoreBanner->scoreTexture)
-    {
-        printf("Internal error by managing memory of score banner.\n");
-        closeNoAction(); 
-        return false;
-    }*/
 
 
     if (!(makeBorder(noaction->border)))
@@ -284,6 +277,20 @@ void closeNoAction()
         free(noaction->pause);
     }
     noaction->pause = NULL;
+
+    if (noaction->heroLivesBanner)
+    {
+        if (noaction->heroLivesBanner->heroLivesTextures)
+        {
+            noaction->heroLivesBanner->heroLivesTextures = NULL;
+        }
+        if (noaction->heroLivesBanner->heroLivesText)
+        {
+            noaction->heroLivesBanner->heroLivesText = NULL;
+        }
+        free(noaction->heroLivesBanner);
+        noaction->heroLivesBanner = NULL;
+    }
     free(noaction);
     noaction = NULL;
 }

@@ -3,6 +3,7 @@
 
 
 #include "../sdlcore/sdlcore.h"
+#include "../consts/gameconsts.h"
 //#include "../types/gametypes.h"
 
 font_type* initGameFonts();

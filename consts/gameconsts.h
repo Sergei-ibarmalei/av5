@@ -1,6 +1,8 @@
 #ifndef GAMECONSTS_H
 #define GAMECONSTS_H
 
+#define HERO_LIVES 3
+
 #define SCORE_BANNER_LEN 6
 
 #define BORDER_THICKNESS 5

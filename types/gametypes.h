@@ -105,6 +105,15 @@ typedef struct
     int          score;
 } score_t;
 
+/*Баннер где отображаются жизни героя*/
+typedef struct 
+{
+    simple_type* heroLivesTextures;
+    simple_type* heroLivesText;
+} heroLives_t;
+
+
+
 /*No action stuff like score, border, sky*/
 typedef struct
 {
@@ -112,6 +121,10 @@ typedef struct
     sky_t*       sky;
     score_t*     scoreBanner;
     simple_type* pause;
+    
+    //Баннер отображения жизней героя
+    //Изображения жизней плюс текст
+    heroLives_t* heroLivesBanner; 
 } noaction_t;
 
 
@@ -136,6 +149,7 @@ typedef struct
     bool pause;
     bool partOne;
     bool partTwo;
+    int  HeroLives;
 } status_t;
 
 #endif
