@@ -210,6 +210,17 @@ void allTexturesFree(tc* collection)
         free(collection->gameText);
         collection->gameText = NULL;
     }
+
+    if (collection->heroBanner)
+    {
+        for (texture = 0; texture < allHeroBannerText; ++texture)
+        {
+            textureFree(collection->heroBanner[texture].objTexture);
+            free(collection->heroBanner[texture].objRect);
+        }
+        free(collection->heroBanner);
+        collection->heroBanner = NULL;
+    }
 }
 
 /*Рисуем одну текстуру*/

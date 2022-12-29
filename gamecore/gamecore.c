@@ -1,5 +1,6 @@
 #include "gamecore.h"
 #define PAUSE_STRINGS_LEN 2
+#define HEROLIVESBANNERTEXT_LEN 3
 
 bool makeBorder(border_t* border);
 void makeScoreBanner(score_t* scoreBanner, simple_type* gameText);
@@ -17,6 +18,7 @@ void recomputeHeroRects(ship_t* hero);
 void recomputeHeroCenter(ship_t* hero);
 bool makeMainMenu(tc* collection);
 bool makePause(tc* collection);
+bool makeHeroLivesBanner(tc* collection);
 
 enum noaction_pause {na_pause, na_press_esc};
 static noaction_t* noaction;
@@ -37,16 +39,42 @@ bool makeNoAction(tc* collection)
     noaction->scoreBanner = NULL;
     noaction->sky = NULL;
     noaction->pause = NULL;
-    noaction->heroLivesBanner = NULL;
+    noaction->heroLivesBan = NULL;
 
-    noaction->heroLivesBanner = malloc(sizeof(simple_type));
+    noaction->heroLivesBan = malloc(sizeof(heroLives_t));
     {
-        if (!noaction->heroLivesBanner)
+        if (!noaction->heroLivesBan)
         {
             printf("Internal error by managing memory of hero lives banner.\n");
             closeNoAction();
             return false;
         }
+    }
+
+    noaction->heroLivesBan->heroLivesTextures = 
+        malloc(sizeof(simple_type*));
+    if (!noaction->heroLivesBan->heroLivesTextures)
+    {
+        printf("Internal error by managing memory of hero lives textures.\n");
+        closeNoAction();
+        return false;
+    }
+    noaction->heroLivesBan->heroLivesTextures->objTexture = NULL;
+    noaction->heroLivesBan->heroLivesTextures->objRect = 
+        malloc(sizeof(SDL_Rect));
+    if (!noaction->heroLivesBan->heroLivesTextures->objRect)
+    {
+        printf("Internal error by managing memory of hero ban rect.\n");
+        closeNoAction();
+        return false;
+    }
+    noaction->heroLivesBan->heroLivesText = 
+        malloc(sizeof(simple_type) * HEROLIVESBANNERTEXT_LEN);
+    if (!noaction->heroLivesBan->heroLivesText)
+    {
+        printf("Internal error by managing memory of hero banner text.\n");
+        closeNoAction();
+        return false;
     }
 
     noaction->border = malloc(sizeof(border_t));
@@ -135,8 +163,49 @@ bool makeNoAction(tc* collection)
         closeNoAction();
         return false;
     }
+
+    if (!makeHeroLivesBanner(collection))
+    {
+        closeNoAction();
+        return false;
+    }
     return true;
 }
+
+
+/*Создание баннера с изображениями жизней героя*/
+bool makeHeroLivesBanner(tc* collection)
+{
+    if (!collection || !collection->complexObj[hero].objTexture)
+    {
+        printf("Cannot create hero lives banner, textures are absent.\n");
+        return false;
+    }
+
+    int object;
+
+    /*Берем текстуру героя из коллекции*/
+    noaction->heroLivesBan->heroLivesTextures->objTexture =
+        collection->complexObj[hero].objTexture;
+    noaction->heroLivesBan->heroLivesTextures->objRect->w =
+        collection->complexObj[hero].objRectsArr[mainRect].w;
+    noaction->heroLivesBan->heroLivesTextures->objRect->h =
+        collection->complexObj[hero].objRectsArr[mainRect].h;
+    
+     
+
+    /*Берем три текстуры х1 х2 х3*/ 
+    for (object = 0; object < HEROLIVESBANNERTEXT_LEN; ++object)
+    {
+        noaction->heroLivesBan->heroLivesText[object] =
+            collection->heroBanner[object];
+    }
+    return true;
+}
+
+
+
+
 
 void makeScoreBanner(score_t* scoreBanner, simple_type* gameText)
 {
@@ -278,18 +347,27 @@ void closeNoAction()
     }
     noaction->pause = NULL;
 
-    if (noaction->heroLivesBanner)
+    if (noaction->heroLivesBan)
     {
-        if (noaction->heroLivesBanner->heroLivesTextures)
+        if (noaction->heroLivesBan->heroLivesTextures)
         {
-            noaction->heroLivesBanner->heroLivesTextures = NULL;
+            noaction->heroLivesBan->heroLivesTextures->objTexture = NULL;
+            free(noaction->heroLivesBan->heroLivesTextures->objRect);
+            noaction->heroLivesBan->heroLivesTextures->objRect = NULL;
+            free(noaction->heroLivesBan->heroLivesTextures);
+            noaction->heroLivesBan->heroLivesTextures = NULL;
         }
-        if (noaction->heroLivesBanner->heroLivesText)
+        if (noaction->heroLivesBan->heroLivesText)
         {
-            noaction->heroLivesBanner->heroLivesText = NULL;
+            for (count = 0; count < HEROLIVESBANNERTEXT_LEN; ++count)
+            {
+                noaction->heroLivesBan->heroLivesText->objTexture = NULL;
+            }
+            free(noaction->heroLivesBan->heroLivesText);
+            noaction->heroLivesBan->heroLivesText = NULL;
         }
-        free(noaction->heroLivesBanner);
-        noaction->heroLivesBanner = NULL;
+        free(noaction->heroLivesBan);
+        noaction->heroLivesBan = NULL;
     }
     free(noaction);
     noaction = NULL;
@@ -446,6 +524,47 @@ void showPause(sdl_type* sdl)
                     noaction->pause[na_pause].objRect);
     textureRender(sdl, noaction->pause[na_press_esc].objTexture,
                     noaction->pause[na_press_esc].objRect);
+}
+
+void showHeroBanner(sdl_type* sdl, status_t* status)
+{
+    if (status->HeroLives < 0) return;
+    
+    #define BORD_LEFT noaction->border->border[borderLeft].x + BORDER_THICKNESS
+    #define BORD_UP   noaction->border->border[borderUp].y
+    #define HEROLIVE_W noaction->heroLivesBan->heroLivesTextures->objRect->w
+    #define HEROLIVE_H noaction->heroLivesBan->heroLivesTextures->objRect->h
+    #define CURRENT_TEXT status->HeroLives - 1
+    #define HEROTEXTURE_W noaction->heroLivesBan->heroLivesTextures->objRect->x\
+            + noaction->heroLivesBan->heroLivesTextures->objRect->w
+    #define XTEXTURE_H noaction->heroLivesBan->heroLivesText[0].objRect->h
+
+    /*Рисуем текстурку героя в баннере*/
+    noaction->heroLivesBan->heroLivesTextures->objRect->x =
+        BORD_LEFT + BORDER_THICKNESS;
+    noaction->heroLivesBan->heroLivesTextures->objRect->y =
+        BORD_UP - HEROLIVE_H;
+    textureRender(sdl, noaction->heroLivesBan->heroLivesTextures->objTexture,
+                    noaction->heroLivesBan->heroLivesTextures->objRect);
+
+    noaction->heroLivesBan->heroLivesText[CURRENT_TEXT].objRect->x = 
+        HEROTEXTURE_W + 2 * BORDER_THICKNESS;
+    noaction->heroLivesBan->heroLivesText[CURRENT_TEXT].objRect->y =
+        BORD_UP - XTEXTURE_H - BORDER_THICKNESS;
+    textureRender(sdl, 
+                noaction->heroLivesBan->heroLivesText[CURRENT_TEXT].objTexture,
+                noaction->heroLivesBan->heroLivesText[CURRENT_TEXT].objRect);
+
+
+
+    #undef XTEXTURE_H
+    #undef HEROTEXTURE_W
+    #undef BORD_LEFT
+    #undef BORD_UP
+    #undef HEROLIVE_W
+    #undef HEROLIVE_H
+    #undef CURRENT_TEXT
+
 }
 
 void moveSky()

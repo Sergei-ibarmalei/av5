@@ -89,6 +89,7 @@ bool initTextsCollection(sdl_type* sdl, tc* collection, font_type* gameFonts)
                                      "PAUSE", "NEW GAME", "RULES", "EXIT",
                                      "NEW GAME", "RULES", "EXIT",
                                      "PRESS ESC TO EXIT, Q TO MAIN MENU"};
+    const char* heroBannerNames[] = {"x 1", "x 2", "x 3"};
 
     collection->complexObj = malloc(sizeof(complex_type)*allComplexObjects);
     if (!collection->complexObj)
@@ -104,6 +105,12 @@ bool initTextsCollection(sdl_type* sdl, tc* collection, font_type* gameFonts)
     if (!collection->gameText)
     {
         printf("Internal error by simple text textures init.\n"); return false;
+    }
+    collection->heroBanner = malloc(sizeof(simple_type)* allHeroBannerText);
+    if (!collection->heroBanner)
+    {
+        printf("Internal error by hero banner textures init.\n");
+        return false;
     }
 
     for (object = 0; object < allComplexObjects; ++object)
@@ -206,6 +213,23 @@ bool initTextsCollection(sdl_type* sdl, tc* collection, font_type* gameFonts)
             }
     }
 
+    /*Создание текстур для жизней героя х1, х2, х3*/
+
+    for (object = x1; object < allHeroBannerText; ++object)
+    {
+        collection->heroBanner[object].objTexture = NULL;
+        collection->heroBanner[object].objRect = malloc(sizeof(SDL_Rect));
+        if (loadFromText(sdl,
+                         heroBannerNames[object],
+                         &gameFonts[guifont],
+                         &collection->heroBanner[object].objTexture,
+                         collection->heroBanner[object].objRect) == false)
+            {
+                printf("Cannot create texture for hero banner, abort.\n");
+                return false;
+            }
+    }
+
     /*Создание текстур для надписи "Press esc to.."*/
     object = press_esc;
     collection->gameText[object].objTexture = NULL;
@@ -220,7 +244,8 @@ bool initTextsCollection(sdl_type* sdl, tc* collection, font_type* gameFonts)
             printf("Cannot create texture for Press esc.., abort.\n");
             return false;
         }
-    
+
+
     return true;
 }
 

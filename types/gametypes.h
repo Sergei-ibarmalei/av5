@@ -56,6 +56,9 @@ enum simpleTextTextures {zero,
                          press_esc,
                          allSimpleTextObjects};
 
+
+enum heroBannerText {x1, x2, x3, allHeroBannerText};
+
 enum starCount {fastStarMax = 5, slowStarMax = 4};
 
 enum borderSides {borderUp,
@@ -73,6 +76,7 @@ typedef struct
     complex_type* complexObj; /*Коллекция complex текстур*/
     simple_type*  simpleObj;  /*Коллекция simple текстур*/
     simple_type*  gameText;       /*Коллекция gameText текстур*/
+    simple_type*  heroBanner; /*Отображение жизней героя*/
 } tc;
 
 /*Тип определяющий любой корабль*/
@@ -121,10 +125,10 @@ typedef struct
     sky_t*       sky;
     score_t*     scoreBanner;
     simple_type* pause;
-    
+
     //Баннер отображения жизней героя
     //Изображения жизней плюс текст
-    heroLives_t* heroLivesBanner; 
+    heroLives_t* heroLivesBan; 
 } noaction_t;
 
 

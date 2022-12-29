@@ -18,5 +18,6 @@ void showScoreBanner(sdl_type* sdl);
 void showSky(sdl_type* sdl);
 void moveSky();
 void showPause(sdl_type* sdl);
+void showHeroBanner(sdl_type* sdl, status_t* status);
 
 #endif

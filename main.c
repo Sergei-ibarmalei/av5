@@ -64,6 +64,7 @@ int main()
 
         showBorder(&sdl);
         showScoreBanner(&sdl);
+        showHeroBanner(&sdl, &gameStatus);
 
         SDL_RenderPresent(sdl.gRenderer);
     }
