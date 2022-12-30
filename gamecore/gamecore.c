@@ -597,6 +597,7 @@ void showHeroBanner(sdl_type* sdl, status_t* status)
     textureRender(sdl, noaction->heroLivesBan->heroLivesTextures->objTexture,
                     noaction->heroLivesBan->heroLivesTextures->objRect);
 
+    /*Рисуем множитель жизней*/
     noaction->heroLivesBan->heroLivesText[CURRENT_TEXT].objRect->x = 
         HEROTEXTURE_W + 2 * BORDER_THICKNESS;
     noaction->heroLivesBan->heroLivesText[CURRENT_TEXT].objRect->y =
@@ -604,8 +605,6 @@ void showHeroBanner(sdl_type* sdl, status_t* status)
     textureRender(sdl, 
                 noaction->heroLivesBan->heroLivesText[CURRENT_TEXT].objTexture,
                 noaction->heroLivesBan->heroLivesText[CURRENT_TEXT].objRect);
-
-
 
     #undef XTEXTURE_H
     #undef HEROTEXTURE_W

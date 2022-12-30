@@ -20,6 +20,20 @@ typedef struct
     SDL_Rect*    objRect;
 } simple_type;
 
+struct weaponNode
+{
+    SDL_Rect shotRect;
+    struct weaponNode* next;
+    struct weaponNode* prev;
+};
+
+typedef struct
+{
+    struct weaponNode* firstShot;
+    struct weaponNode* lastShot;
+} weaponStore_t;
+
+
 enum velocity {velocityX, velocityY, allVelocity};
 
 
