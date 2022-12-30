@@ -6,6 +6,7 @@ set(SOURCES
     inits/inits.c
     random/rand.c
     mainmenu/mainmenu.c
+    partone/partone.c
     main.c)
 
 SET(CMAKE_C_COMPILER /usr/bin/clang)
