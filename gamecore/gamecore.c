@@ -19,6 +19,7 @@ void recomputeHeroCenter(ship_t* hero);
 bool makeMainMenu(tc* collection);
 bool makePause(tc* collection);
 bool makeHeroLivesBanner(tc* collection);
+void showPause(sdl_type* sdl);
 
 enum noaction_pause {na_pause, na_press_esc};
 static noaction_t* noaction;
@@ -375,7 +376,8 @@ void closeNoAction()
 
 void playerAction(sdl_type* sdl,
                   ship_t* hero,
-                  tc* textureCollection)
+                  tc* textureCollection,
+                  status_t* status)
 {
     while (SDL_PollEvent(&sdl->e) != 0)
     {
@@ -399,6 +401,11 @@ void playerAction(sdl_type* sdl,
                 case SDLK_RIGHT:
                 {
                     heroRight(hero); break;
+                }
+                case SDLK_ESCAPE:
+                {
+                    status->pause = !status->pause;
+                    break;
                 }
                 default: {}
             }
@@ -524,6 +531,49 @@ void showPause(sdl_type* sdl)
                     noaction->pause[na_pause].objRect);
     textureRender(sdl, noaction->pause[na_press_esc].objTexture,
                     noaction->pause[na_press_esc].objRect);
+}
+
+void pauseIsPressed(sdl_type* sdl, ship_t* hero, status_t* status)
+{
+    while (!sdl->gameQuit || !status->pause)
+    {
+        SDL_RenderClear(sdl->gRenderer);
+        showSky(sdl);
+        moveSky();
+        renderComplexObject(sdl, hero->shipObject);
+        showBorder(sdl);
+        showScoreBanner(sdl);
+        showHeroBanner(sdl, status);
+        showPause(sdl);
+        while (SDL_PollEvent(&sdl->e) != 0)
+        {
+            if (sdl->e.type == SDL_QUIT)
+            {
+                sdl->gameQuit = true; 
+                status->pause = false;
+                return;
+            }
+            else if (sdl->e.type == SDL_KEYDOWN && sdl->e.key.repeat == 0)
+            {
+                switch (sdl->e.key.keysym.sym)
+                {
+                    case SDLK_ESCAPE:
+                    {
+                        status->pause = false;
+                        return;
+                    }
+                    case SDLK_q:
+                    {
+                        status->mainMenu = true;
+                        return;
+                    }
+                    default : {}
+                }
+            }
+        }
+        SDL_RenderPresent(sdl->gRenderer);
+    }
+
 }
 
 void showHeroBanner(sdl_type* sdl, status_t* status)

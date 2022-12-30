@@ -10,14 +10,15 @@ bool makeNoAction(tc* collection);
 void closeNoAction();
 void playerAction(sdl_type* sdl,
                   ship_t* hero,
-                  tc* textureCollection);
+                  tc* textureCollection,
+                  status_t* status);
 
 void moveHero(ship_t* hero);
 void showBorder(sdl_type* sdl);
 void showScoreBanner(sdl_type* sdl);
 void showSky(sdl_type* sdl);
 void moveSky();
-void showPause(sdl_type* sdl);
+void pauseIsPressed(sdl_type* sdl, ship_t* hero, status_t* status);
 void showHeroBanner(sdl_type* sdl, status_t* status);
 
 #endif
