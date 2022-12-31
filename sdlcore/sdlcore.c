@@ -269,3 +269,10 @@ void renderSky(sdl_type* sdl, sky_t* sky)
         textureRender(sdl, sky->starTexture->objTexture, &sky->slow[count]);
     }
 }
+
+void renderShot(sdl_type* sdl, struct weaponNode* shot, SDL_Texture* text)
+{
+    if (shot == NULL) return;
+    textureRender(sdl, text, &shot->shotRect);
+    renderShot(sdl, shot->next, text);
+}

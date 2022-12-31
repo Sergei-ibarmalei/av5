@@ -11,4 +11,6 @@ bool initTextsCollection(sdl_type* sdl, tc* collection, font_type* gameFonts);
 bool initHero(tc* collection, ship_t* hero, plot* startPos);
 void closeHero(ship_t* hero);
 void initGameStatus(status_t* status);
+bool initMadeShots(madeShots_t* madeShots, tc* collection);
+void initHeroShotStartPos(struct weaponNode* shot, ship_t* hero);
 #endif

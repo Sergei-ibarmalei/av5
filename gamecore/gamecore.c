@@ -20,6 +20,9 @@ bool makeMainMenu(tc* collection);
 bool makePause(tc* collection);
 bool makeHeroLivesBanner(tc* collection);
 void showPause(sdl_type* sdl);
+void movingHeroShot(struct weaponNode* shot);
+bool heroShotCrossedBorder(struct weaponNode* shot);
+void deleteLastShot(madeShots_t* madeShots);
 
 enum noaction_pause {na_pause, na_press_esc};
 static noaction_t* noaction;
@@ -376,7 +379,7 @@ void closeNoAction()
 
 void playerAction(sdl_type* sdl,
                   ship_t* hero,
-                  tc* textureCollection,
+                  madeShots_t* madeShots,
                   status_t* status)
 {
     while (SDL_PollEvent(&sdl->e) != 0)
@@ -401,6 +404,15 @@ void playerAction(sdl_type* sdl,
                 case SDLK_RIGHT:
                 {
                     heroRight(hero); break;
+                }
+                case SDLK_SPACE:
+                {
+                    if (!makeShotHero(hero, madeShots))
+                    {
+                        sdl->gameQuit = true;
+                        return;
+                    }
+                    break;
                 }
                 case SDLK_ESCAPE:
                 {
@@ -533,7 +545,8 @@ void showPause(sdl_type* sdl)
                     noaction->pause[na_press_esc].objRect);
 }
 
-void pauseIsPressed(sdl_type* sdl, ship_t* hero, status_t* status)
+void pauseIsPressed(sdl_type* sdl, ship_t* hero, 
+                    madeShots_t* madeShots, status_t* status)
 {
     while (!sdl->gameQuit || !status->pause)
     {
@@ -541,6 +554,7 @@ void pauseIsPressed(sdl_type* sdl, ship_t* hero, status_t* status)
         showSky(sdl);
         moveSky();
         renderComplexObject(sdl, hero->shipObject);
+        showShots(sdl, madeShots);
         showBorder(sdl);
         showScoreBanner(sdl);
         showHeroBanner(sdl, status);
@@ -719,3 +733,74 @@ bool makeMainMenu(tc* collection)
     }
     return true;
 }
+
+bool makeShotHero(ship_t* hero, madeShots_t* madeshots)
+{
+    struct weaponNode* tmp = malloc(sizeof(struct weaponNode));
+    if (!tmp)
+    {
+        printf("Internal error by managing memory of hero shot.\n");
+        return false;
+    }
+    tmp->prev = NULL;
+    tmp->next = NULL;
+    initHeroShotStartPos(tmp, hero);
+    tmp->shotRect.w = madeshots->heroShots.shot->objRect->w;
+    tmp->shotRect.h = madeshots->heroShots.shot->objRect->h;
+    tmp->next = madeshots->heroShots.firstShot;
+    if (madeshots->heroShots.firstShot)
+        madeshots->heroShots.firstShot->prev = tmp;
+    else
+        madeshots->heroShots.lastShot = tmp;
+    madeshots->heroShots.firstShot = tmp;
+    return true;
+}
+
+void showShots(sdl_type* sdl, madeShots_t* madeShots)
+{
+    #define FIRST_SHOT madeShots->heroShots.firstShot
+    #define TEXTURE madeShots->heroShots.shot->objTexture
+
+    renderShot(sdl, FIRST_SHOT, TEXTURE);
+
+    #undef TEXTURE
+    #undef FIRST_SHOT
+}
+
+void moveShots(madeShots_t* madeShots)
+{
+    if (!madeShots->heroShots.firstShot) return;
+    movingHeroShot(madeShots->heroShots.firstShot);
+    if (heroShotCrossedBorder(madeShots->heroShots.lastShot))
+        deleteLastShot(madeShots);
+}
+
+void movingHeroShot(struct weaponNode* shot)
+{
+    if (shot == NULL) return;
+    shot->shotRect.y -= HERO_SHOT_VELOCITY;
+    movingHeroShot(shot->next);
+}
+
+bool heroShotCrossedBorder(struct weaponNode* shot)
+{
+    return (shot->shotRect.y + shot->shotRect.h) < 
+            (noaction->border->border[borderUp].y +
+             BORDER_THICKNESS);
+}
+
+void deleteLastShot(madeShots_t* madeShots)
+{
+    if (madeShots->heroShots.lastShot == NULL) return;
+    struct weaponNode* current = madeShots->heroShots.lastShot;
+    madeShots->heroShots.lastShot = madeShots->heroShots.lastShot->prev;
+    if (madeShots->heroShots.lastShot)
+        madeShots->heroShots.lastShot->next = NULL;
+    if (current == madeShots->heroShots.firstShot)
+        madeShots->heroShots.firstShot = NULL;
+    free(current);
+    return;
+}
+
+
+

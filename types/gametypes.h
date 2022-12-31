@@ -27,11 +27,19 @@ struct weaponNode
     struct weaponNode* prev;
 };
 
+/*Список выстрелов*/
 typedef struct
 {
     struct weaponNode* firstShot;
     struct weaponNode* lastShot;
+    simple_type*       shot;
 } weaponStore_t;
+
+/*Списки сделанных выстрелов*/
+typedef struct 
+{
+    weaponStore_t heroShots;
+} madeShots_t;
 
 
 enum velocity {velocityX, velocityY, allVelocity};

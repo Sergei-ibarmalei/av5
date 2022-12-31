@@ -327,7 +327,7 @@ bool initHeroLaserPosition(tc* collection, ship_t* ship)
     }
 
     ship->laserOffSets->x =
-        ship->shipObject->objRectsArr[mainRect].w/2;
+        ship->shipObject->objRectsArr[mainRect].w/2 - HERO_LASER_OFFSET;
     ship->laserOffSets->y =
         collection->simpleObj[(int)heroLaser].objRect->h + HERO_LASER_OFFSET;
 
@@ -339,5 +339,43 @@ bool initHeroLaserPosition(tc* collection, ship_t* ship)
         ship->laserOffSets->y;
     #undef HERO_LASER_OFFSET
     return true;
+}
+
+bool initMadeShots(madeShots_t* madeShots, tc* collection)
+{
+    if (!collection || !collection->simpleObj[heroLaser].objTexture)
+    {
+        printf("Cannot create hero laser, texture is absent.\n");
+        return false;
+    }
+    madeShots->heroShots.firstShot = NULL;
+    madeShots->heroShots.lastShot = NULL;
+    madeShots->heroShots.shot = malloc(sizeof(simple_type));
+    if (!madeShots->heroShots.shot)
+    {
+        printf("Internal error by managing memory of hero laser.\n");
+        return false;
+    }
+    madeShots->heroShots.shot->objRect = malloc(sizeof(SDL_Rect));
+    if (!madeShots->heroShots.shot->objRect)
+    {
+        printf("Internal error by managing memory of hero laser rect.\n");
+        return false;
+    }
+    madeShots->heroShots.shot->objRect->w = 
+        collection->simpleObj[heroLaser].objRect->w;
+    madeShots->heroShots.shot->objRect->h = 
+        collection->simpleObj[heroLaser].objRect->h;
+    madeShots->heroShots.shot->objTexture =
+        collection->simpleObj[heroLaser].objTexture;
+
+    return true;
+
+}
+
+void initHeroShotStartPos(struct weaponNode* shot, ship_t* hero)
+{
+   shot->shotRect.x = hero->laserStartPos->x;
+   shot->shotRect.y = hero->laserStartPos->y;
 }
 
